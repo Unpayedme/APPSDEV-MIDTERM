@@ -1,6 +1,6 @@
 function ProductCard({ image, productName, price, description }) {
   return (
-    <div className="bg-[#1a1a1a] rounded-xl shadow-lg p-4 flex flex-col justify-between w-60">
+    <div className="bg-gray-300 rounded-xl shadow-lg p-4 flex flex-col justify-between w-80">
       <img
         src={image}
         alt={productName}
@@ -9,7 +9,7 @@ function ProductCard({ image, productName, price, description }) {
       <h2 className="text-lg font-semibold text-white truncate">
         {productName}
       </h2>
-      <h3 className="text-blue-400 font-bold mt-1">₱{price}</h3>
+      <h3 className="text-blue-400 font-bold mt-1">₱{price.toFixed(2)}</h3>
       <p className="text-gray-400 text-sm line-clamp-2 overflow-hidden">
         {description}
       </p>

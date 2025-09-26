@@ -10,7 +10,7 @@ function App() {
   const [category, setCategory] = useState("All");
   const [cart, setCart] = useState([]);
 
-  // ✅ Fetch products
+
   useEffect(() => {
     fetch("https://dummyjson.com/products?limit=50")
       .then((res) => res.json())
@@ -29,7 +29,7 @@ function App() {
       .catch((err) => console.error("Error fetching products:", err));
   }, []);
 
-  // ✅ Filters & Sorting
+
   useEffect(() => {
     let result = [...products];
 
@@ -60,9 +60,9 @@ function App() {
   };
 
   return (
-    <div className="min-h-screen bg-gray-900 text-gray-100 font-sans">
+    <div className="min-h-screen bg-white-900 text-gray-100 font-sans">
       {/* HEADER */}
-      <header className="text-center py-6 bg-[#090040] text-white shadow-md">
+      <header className="py-6 bg-[#090040] text-white shadow-md px-10">
         <h1 className="text-3xl font-bold">🛍 E-Commerce Shop</h1>
         <p className="text-sm">Find the best product deals here!</p>
       </header>
