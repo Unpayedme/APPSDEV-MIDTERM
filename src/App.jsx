@@ -10,18 +10,17 @@ function App() {
   const [category, setCategory] = useState("All");
   const [cart, setCart] = useState([]);
 
-  // ✅ Fetch products from DummyJSON API
+  // ✅ Fetch products
   useEffect(() => {
     fetch("https://dummyjson.com/products?limit=50")
       .then((res) => res.json())
       .then((data) => {
-        // Map API fields to match your product format
         const formattedProducts = data.products.map((p) => ({
           id: p.id,
           image: p.thumbnail,
           productName: p.title,
           description: p.description,
-          price: p.price * 60, // convert to php
+          price: p.price * 60,
           category: p.category,
         }));
         setProducts(formattedProducts);
@@ -30,7 +29,7 @@ function App() {
       .catch((err) => console.error("Error fetching products:", err));
   }, []);
 
- 
+  // ✅ Filters & Sorting
   useEffect(() => {
     let result = [...products];
 
@@ -39,11 +38,9 @@ function App() {
         p.productName.toLowerCase().includes(search.toLowerCase())
       );
     }
-
     if (category !== "All") {
       result = result.filter((p) => p.category === category);
     }
-
     result = result.filter(
       (p) => p.price >= priceRange[0] && p.price <= priceRange[1]
     );
@@ -63,60 +60,40 @@ function App() {
   };
 
   return (
-    <div style={{ fontFamily: "Arial, sans-serif", background: "#fafafa" }}>
+    <div className="min-h-screen bg-gray-900 text-gray-100 font-sans">
       {/* HEADER */}
-      <header
-        style={{
-          textAlign: "center",
-          padding: "20px",
-          background: "#ff5722",
-          color: "white",
-        }}
-      >
-        <h1 style={{ margin: 0 }}> 🛍 E-Commerce Shop</h1>
-        <p style={{ margin: 0 }}>Find the best product deals here!</p>
+      <header className="text-center py-6 bg-[#090040] text-white shadow-md">
+        <h1 className="text-3xl font-bold">🛍 E-Commerce Shop</h1>
+        <p className="text-sm">Find the best product deals here!</p>
       </header>
 
       {/* FILTERS */}
-      <div
-        style={{
-          textAlign: "center",
-          padding: "15px",
-          background: "white",
-          boxShadow: "0 2px 5px rgba(0,0,0,0.1)",
-        }}
-      >
+      <div className="flex flex-wrap justify-center items-center gap-4 py-6 bg-gray-800 shadow-md">
         {/* Search */}
         <input
           type="text"
-          placeholder=" Search products..."
+          placeholder="Search products..."
           value={search}
           onChange={(e) => setSearch(e.target.value)}
-          style={{
-            margin: "10px",
-            padding: "10px",
-            borderRadius: "5px",
-            border: "1px solid #ccc",
-            width: "250px",
-          }}
+          className="px-4 py-2 rounded-md text-gray-900 w-64"
         />
 
         {/* Sort */}
         <select
           value={sort}
           onChange={(e) => setSort(e.target.value)}
-          style={{ margin: "10px", padding: "10px", borderRadius: "5px" }}
+          className="px-3 py-2 rounded-md bg-gray-700"
         >
           <option value="default">Sort By</option>
           <option value="low-high">Price: Low → High</option>
           <option value="high-low">Price: High → Low</option>
         </select>
 
-        {/* Dropdown Category (Dynamic from API) */}
+        {/* Category */}
         <select
           value={category}
           onChange={(e) => setCategory(e.target.value)}
-          style={{ margin: "10px", padding: "10px", borderRadius: "5px" }}
+          className="px-3 py-2 rounded-md bg-gray-700"
         >
           <option value="All">All Categories</option>
           {[...new Set(products.map((p) => p.category))].map((cat) => (
@@ -127,28 +104,21 @@ function App() {
         </select>
 
         {/* Price Range */}
-        <label style={{ marginLeft: "10px" }}>
-          Price: ₱{priceRange[0]} - ₱{priceRange[1]}
-        </label>
-        <input
-          type="range"
-          min="0"
-          max="5000"
-          value={priceRange[1]}
-          onChange={(e) => setPriceRange([0, Number(e.target.value)])}
-          style={{ marginLeft: "10px" }}
-        />
+        <div className="flex items-center gap-2">
+          <label>₱{priceRange[0]} - ₱{priceRange[1]}</label>
+          <input
+            type="range"
+            min="0"
+            max="5000"
+            value={priceRange[1]}
+            onChange={(e) => setPriceRange([0, Number(e.target.value)])}
+            className="w-40"
+          />
+        </div>
       </div>
 
       {/* PRODUCT GRID */}
-      <div
-        style={{
-          display: "grid",
-          gridTemplateColumns: "repeat(auto-fill, minmax(220px, 1fr))",
-          gap: "20px",
-          padding: "20px",
-        }}
-      >
+      <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-6 p-6 justify-items-center">
         {filteredProducts.map((product) => (
           <ProductCard
             key={product.id}
@@ -162,37 +132,29 @@ function App() {
       </div>
 
       {/* CART SECTION */}
-      <div
-        style={{
-          background: "white",
-          padding: "20px",
-          marginTop: "20px",
-          boxShadow: "0 -2px 5px rgba(0,0,0,0.1)",
-        }}
-      >
-        <h2>🛒 Your Cart</h2>
+      <div className="bg-gray-800 p-6 mt-6 shadow-inner max-w-3xl mx-auto rounded-lg">
+        <h2 className="text-2xl font-bold mb-4">🛒 Your Cart</h2>
         {cart.length === 0 ? (
-          <p className="text-gray-500">No items in cart.</p>
+          <p className="text-gray-400">No items in cart.</p>
         ) : (
           <ul className="list-disc pl-6 space-y-1">
             {cart.map((item, index) => (
-              <li key={index} className="text-gray-800">
+              <li key={index}>
                 {item.productName} - ₱{item.price}
               </li>
             ))}
           </ul>
         )}
-
-        <h3 className="text-lg font-bold mt-4">
+        <h3 className="text-xl font-bold mt-4">
           Total: ₱{cart.reduce((sum, item) => sum + item.price, 0)}
         </h3>
-
         <button
           disabled={cart.length === 0}
-          className={`mt-4 px-5 py-3 rounded text-white text-lg transition 
-            ${cart.length === 0 
-              ? "bg-gray-400 cursor-not-allowed" 
-              : "bg-orange-600 hover:bg-orange-700"}`}
+          className={`mt-4 px-5 py-3 rounded-lg text-white text-lg transition ${
+            cart.length === 0
+              ? "bg-gray-500 cursor-not-allowed"
+              : "bg-orange-600 hover:bg-orange-700"
+          }`}
         >
           Checkout
         </button>
